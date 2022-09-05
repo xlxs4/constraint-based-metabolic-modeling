@@ -43,7 +43,7 @@ Downloads.download("http://bigg.ucsd.edu/escher_map_json/e_coli_core.Core%20meta
 ##
 # Visualize the metabolism.
 escherplot(
-    "e_coli_core_map.json"; 
+    constructpath("data", "e_coli_core_map.json"); 
     reaction_show_text = true,
     reaction_edge_color = :grey,
     metabolite_show_text = true,
@@ -52,5 +52,10 @@ escherplot(
 )
 hidexdecorations!(current_axis())
 hideydecorations!(current_axis())
-current_figure()
+p = current_figure()
+##
+
+##
+# Save metabolism graph.
+save(constructpath("results", "metabolism.pdf"), p)
 ##
