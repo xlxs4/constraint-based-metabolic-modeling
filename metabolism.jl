@@ -7,13 +7,21 @@ using Colors
 ##
 
 ##
+import Downloads
+##
+
+##
 # Generate a valid OS path.
 function constructpath(dirname::AbstractVector{String}, filename)
     return joinpath(dirname..., filename)
 end
 
 function constructpath(dirname::AbstractString, filename)
-    return joinpath(dirname, filepath)
+    return joinpath(dirname, filename)
+end
+
+function constructpath(filename)
+    return joinpath(filename)
 end
 
 function writeio(data, dirname, filename)
@@ -26,10 +34,10 @@ function writeio(data, dirname, filename)
 
 ##
 # Download a toy model of Escherichia coli's central metabolism.
-download("http://bigg.ucsd.edu/static/models/e_coli_core.json", "e_coli_core.json")
+Downloads.download("http://bigg.ucsd.edu/static/models/e_coli_core.json", constructpath("data", "e_coli_core.json"))
 
 # Download the metabolic map. 
-download("http://bigg.ucsd.edu/escher_map_json/e_coli_core.Core%20metabolism", "e_coli_core_map.json")
+Downloads.download("http://bigg.ucsd.edu/escher_map_json/e_coli_core.Core%20metabolism", constructpath("data", "e_coli_core_map.json"))
 ##
 
 ##
