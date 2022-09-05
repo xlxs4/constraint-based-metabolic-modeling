@@ -15,6 +15,13 @@ end
 function constructpath(dirname::AbstractString, filename)
     return joinpath(dirname, filepath)
 end
+
+function writeio(data, dirname, filename)
+    open(constructpath(dirname, filename), "w") do io
+      write(io, data)
+    end
+    return nothing
+  end
 ##
 
 ##
