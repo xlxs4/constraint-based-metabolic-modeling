@@ -7,6 +7,17 @@ using Colors
 ##
 
 ##
+# Generate a valid OS path.
+function constructpath(dirname::AbstractVector{String}, filename)
+    return joinpath(dirname..., filename)
+end
+
+function constructpath(dirname::AbstractString, filename)
+    return joinpath(dirname, filepath)
+end
+##
+
+##
 # Download a toy model of Escherichia coli's central metabolism.
 download("http://bigg.ucsd.edu/static/models/e_coli_core.json", "e_coli_core.json")
 
