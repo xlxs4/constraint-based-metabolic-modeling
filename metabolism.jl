@@ -65,6 +65,10 @@ function vismetabolism(mappath, reaction_edge_color)
 
     return current_figure()
 end
+
+function generate_flux_edge_colors(fluxes, tolerance, color)
+    return Dict(id => color for (id, flux) ∈ fluxes if abs(flux) > tolerance)
+end
 ##
 
 ##
@@ -73,6 +77,7 @@ const ModelPath = constructpath("data", "e_coli_core.json")
 const MapPath = constructpath("data", "e_coli_core_map.json")
 const MetabolismPath = constructpath("results", "metabolism.pdf")
 const DefReactionsPath = constructpath("results", "default_reactions.pdf")
+const KOReactionsPath = constructpath("results", "ko_genes_reactions.pdf")
 ##
 
 ##
@@ -98,6 +103,21 @@ const fluxes = flux_balance_analysis_dict(model, Tulip.Optimizer) # flux_summary
 ##
 # Save control metabolic reactions graph.
 const tolerance = 1e-3
-const reaction_edge_colors = Dict(id => :red for (id, flux) ∈ fluxes if abs(flux) > tolerance)
-save(DefReactionsPath, vismetabolism(MapPath, reaction_edge_colors))
+save(DefReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(fluxes, tolerance, :red)))
+##
+
+##
+# Knockout genes b0978 (https://biocyc.org/gene?orgid=ECOLI&id=EG11380)
+# and b0734 (https://biocyc.org/gene?orgid=ECOLI&id=EG10174)
+# encoding cytochrome oxidases (bo and putative).
+const ko_fluxes = flux_balance_analysis_dict(
+    model,
+    Tulip.Optimizer;
+    modifications = [knockout(["b0978", "b0734"])],
+)
+##
+
+##
+# Save KO cytochrome oxidase genes metabolic reactions graph.
+save(KOReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(ko_fluxes, tolerance, :red)))
 ##
