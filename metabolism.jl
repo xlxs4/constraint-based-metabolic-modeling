@@ -2,7 +2,7 @@
 using COBREXA
 using Escher
 using CairoMakie
-using Tulip
+using Tulip # You can use other optimizers if you'd like, like GLPK.jl
 using Colors
 ##
 
@@ -78,6 +78,7 @@ const MapPath = constructpath("data", "e_coli_core_map.json")
 const MetabolismPath = constructpath("results", "metabolism.pdf")
 const DefReactionsPath = constructpath("results", "default_reactions.pdf")
 const KOReactionsPath = constructpath("results", "ko_genes_reactions.pdf")
+const MaxEtOHReactionsPath = constructpath("results", "max_etoh_reactions.pdf")
 ##
 
 ##
@@ -95,7 +96,7 @@ save(MetabolismPath, vismetabolism(MapPath, :grey))
 
 ##
 # Simulate E. coli growth.
-const model = load_model(ModelPath)
+const model = load_model(StandardModel, ModelPath)
 # Flux Balance Analysis (FBA).
 const fluxes = flux_balance_analysis_dict(model, Tulip.Optimizer) # flux_summary(fluxes)
 ##
@@ -120,4 +121,22 @@ const ko_fluxes = flux_balance_analysis_dict(
 ##
 # Save KO cytochrome oxidase genes metabolic reactions graph.
 save(KOReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(ko_fluxes, tolerance, :red)))
+##
+
+##
+# Set minimum constraint for cell growth so that the resulting reaction set is viable.
+model_with_bounded_production = change_bound(model, "BIOMASS_Ecoli_core_w_GAM", lower = 0.1)
+const max_etoh_fluxes = flux_balance_analysis_dict(
+    model_with_bounded_production,
+    Tulip.Optimizer;
+    modifications = [
+        change_objective("EX_etoh_e"), # maximze ethanol production
+    ],
+)
+##
+
+##
+# Save maximum EtOH production metabolic reactions graph.
+save(MaxEtOHReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(max_etoh_fluxes, tolerance, :red)))
+#
 ##
