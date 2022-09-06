@@ -35,15 +35,30 @@ function writeio(data, dirname, filename)
 
 ##
 # Visualize the metabolism.
-function vismetabolism(mappath)
-    escherplot(
-        mappath; 
-        reaction_show_text = true,
-        reaction_edge_color = :grey,
-        metabolite_show_text = true,
-        metabolite_node_colors = Dict("glc__D_e" => :red),
-        metabolite_node_color = :lightskyblue,
-    )
+function vismetabolism(mappath, reactionedgecolor)
+    function _escherplot(reactionedgecolor::Symbol)
+        return escherplot(
+            mappath; 
+            reaction_show_text = true,
+            reaction_edge_color = reactionedgecolor,
+            metabolite_show_text = true,
+            metabolite_node_colors = Dict("glc__D_e" => :red),
+            metabolite_node_color = :lightskyblue,
+        )
+    end
+
+    function _escherplot(reactionedgecolors::AbstractDict)
+        return escherplot(
+            mappath; 
+            reaction_show_text = true,
+            reaction_edge_colors = reactionedgecolors,
+            metabolite_show_text = true,
+            metabolite_node_colors = Dict("glc__D_e" => :red),
+            metabolite_node_color = :lightskyblue,
+        )
+    end
+
+    _escherplot(reactionedgecolor)
 
     hidexdecorations!(current_axis())
     hideydecorations!(current_axis())
@@ -57,6 +72,7 @@ end
 const MODELPATH = constructpath("data", "e_coli_core.json")
 const MAPPATH = constructpath("data", "e_coli_core_map.json")
 const METABOLISMPATH = constructpath("results", "metabolism.pdf")
+const DEFREACTIONSPATH = constructpath("results", "default_reactions.pdf")
 ##
 
 ##
@@ -69,5 +85,19 @@ Downloads.download("http://bigg.ucsd.edu/escher_map_json/e_coli_core.Core%20meta
 
 ##
 # Save metabolism graph.
-save(METABOLISMPATH, vismetabolism(MAPPATH))
+save(METABOLISMPATH, vismetabolism(MAPPATH, :grey))
+##
+
+##
+# Simulate E. coli growth.
+const model = load_model(MODELPATH)
+# Flux Balance Analysis (FBA).
+const fluxes = flux_balance_analysis_dict(model, Tulip.Optimizer) # flux_summary(fluxes)
+##
+
+##
+# Save control metabolic reactions graph.
+const tolerance = 1e-3
+const reactionedgecolors = Dict(id => :red for (id, flux) ∈ fluxes if abs(flux) > tolerance)
+save(DEFREACTIONSPATH, vismetabolism(MAPPATH, reactionedgecolors))
 ##
