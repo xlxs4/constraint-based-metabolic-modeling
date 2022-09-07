@@ -5,9 +5,11 @@ using CairoMakie
 using Tulip # You can use other optimizers if you'd like, like GLPK.jl
 using Colors
 ##
-
+# TODO: fix only filename code duplication, check if file exists before downloading and upon save
 ##
 using CSV
+using DataFrames
+using PrettyTables
 ##
 
 ##
@@ -33,19 +35,27 @@ end
 # Save to IO.
 function writeio(data, dirname, filename)
     open(constructpath(dirname, filename), "w") do io
-      write(io, data)
+        write(io, data)
     end
     return nothing
-  end
+end
+
+function writeio(data, filename)
+    open(constructpath(filename), "w") do io
+        write(io, data)
+    end
+    return nothing
+end
 ##
 
 ##
+# CSV IO.
 function readcsv(dirname, filename)
-    return constructpath(dirname, filename) |> CSV.File |> Dict
+    return CSV.File(constructpath(dirname, filename), stringtype=String) |> DataFrame
 end
 
 function readcsv(filename)
-    return constructpath(filename) |> CSV.File |> Dict
+    return CSV.File(constructpath(filename), stringtype=String) |> Dict
 end
 
 function writecsv(data, dirname, filename)
@@ -54,6 +64,24 @@ end
 
 function writecsv(data, filename)
     CSV.write(constructpath(filename), data)
+end
+##
+
+##
+# Convert to Markdown table.
+function tomarkdown(data, header = names(data))
+    conf = set_pt_conf(tf = tf_markdown, alignment = :c)
+    return pretty_table_with_conf(conf, String, data; header = header)
+end
+##
+
+##
+function fluxes_to_df(fluxes)
+    return DataFrame(Reaction = collect(keys(fluxes)), Flux = collect(values(fluxes)))
+end
+
+function df_to_fluxes(df)
+    return Dict(eachrow(df))
 end
 ##
 
