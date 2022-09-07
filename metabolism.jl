@@ -5,7 +5,7 @@ using CairoMakie
 using Tulip # You can use other optimizers if you'd like, like GLPK.jl
 using Colors
 ##
-
+# TODO: add PNGs to README, also export the model (flux) results, etc.
 ##
 import Downloads
 ##
@@ -35,9 +35,9 @@ function writeio(data, dirname, filename)
 
 ##
 # Visualize the metabolism.
-function vismetabolism(mappath, reaction_edge_color)
-    function _escherplot(reaction_edge_color::Symbol)
-        return escherplot(
+function vismetabolism(mappath, reaction_edge_color, resolution = (800, 600))
+    function _escherplot!(reaction_edge_color::Symbol)
+        escherplot!(
             mappath; 
             reaction_show_text = true,
             reaction_edge_color = reaction_edge_color,
@@ -45,10 +45,12 @@ function vismetabolism(mappath, reaction_edge_color)
             metabolite_node_colors = Dict("glc__D_e" => :red),
             metabolite_node_color = :lightskyblue,
         )
+
+        return nothing
     end
 
-    function _escherplot(reaction_edge_colors::AbstractDict)
-        return escherplot(
+    function _escherplot!(reaction_edge_colors::AbstractDict)
+        escherplot!(
             mappath; 
             reaction_show_text = true,
             reaction_edge_colors = reaction_edge_colors,
@@ -56,9 +58,14 @@ function vismetabolism(mappath, reaction_edge_color)
             metabolite_node_colors = Dict("glc__D_e" => :red),
             metabolite_node_color = :lightskyblue,
         )
+
+        return nothing
     end
 
-    _escherplot(reaction_edge_color)
+    f = Figure(resolution = resolution)
+    ax = Axis(f[1, 1])
+
+    _escherplot!(reaction_edge_color)
 
     hidexdecorations!(current_axis())
     hideydecorations!(current_axis())
