@@ -5,7 +5,7 @@ using CairoMakie
 using Tulip # You can use other optimizers if you'd like, like GLPK.jl
 using Colors
 ##
-# TODO: check if file exists before downloading and upon save, extension-agnostic paths
+# TODO: extension-agnostic paths
 ##
 using CSV
 using DataFrames
@@ -142,15 +142,15 @@ const MaxEtOHReactionsPath = constructpath(["results", "pdf"], "max_etoh_reactio
 
 ##
 # Download a toy model of Escherichia coli's central metabolism.
-Downloads.download("http://bigg.ucsd.edu/static/models/e_coli_core.json", ModelPath)
+!isfile(ModelPath) && Downloads.download("http://bigg.ucsd.edu/static/models/e_coli_core.json", ModelPath)
 
 # Download the metabolic map. 
-Downloads.download("http://bigg.ucsd.edu/escher_map_json/e_coli_core.Core%20metabolism", MapPath)
+!isfile(MapPath) && Downloads.download("http://bigg.ucsd.edu/escher_map_json/e_coli_core.Core%20metabolism", MapPath)
 ##
 
 ##
 # Save metabolism graph.
-save(MetabolismPath, vismetabolism(MapPath, :grey))
+!isfile(MetabolismPath) && save(MetabolismPath, vismetabolism(MapPath, :grey))
 ##
 
 ##
@@ -163,7 +163,7 @@ const fluxes = flux_balance_analysis_dict(model, Tulip.Optimizer) # flux_summary
 ##
 # Save control metabolic reactions graph.
 const tolerance = 1e-3
-save(DefReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(fluxes, tolerance, :red)))
+!isfile(DefReactionsPath) && save(DefReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(fluxes, tolerance, :red)))
 ##
 
 ##
@@ -179,7 +179,7 @@ const ko_fluxes = flux_balance_analysis_dict(
 
 ##
 # Save KO cytochrome oxidase genes metabolic reactions graph.
-save(KOReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(ko_fluxes, tolerance, :red)))
+!isfile(KOReactionsPath) && save(KOReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(ko_fluxes, tolerance, :red)))
 ##
 
 ##
@@ -196,6 +196,6 @@ const max_etoh_fluxes = flux_balance_analysis_dict(
 
 ##
 # Save maximum EtOH production metabolic reactions graph.
-save(MaxEtOHReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(max_etoh_fluxes, tolerance, :red)))
+!isfile(MaxEtOHReactionsPath) && save(MaxEtOHReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(max_etoh_fluxes, tolerance, :red)))
 #
 ##
