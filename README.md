@@ -2,8 +2,8 @@
 
 Workflow oneliner examples using various util functions:
 
-- `readcsv(["results", "csv"], "ko_genes_reactions.csv") |> df_to_fluxes |> flux_summary`
-- `writeio(readcsv(["results", "csv"], "max_etoh_reactions.csv") |> tomarkdown, constructpath(["results", "markdown"], "max_etoh_reactions.md"))`
+- `readcsv(constructpath(["results", "csv"], "ko_genes_reactions.csv")) |> df_to_fluxes |> flux_summary`
+- `writeio(readcsv(constructpath(["results", "csv"], "max_etoh_reactions.csv")) |> tomarkdown, constructpath(["results", "markdown"], "max_etoh_reactions.md"))`
 
 ![Complete Metabolism Graph](results/svg/metabolism.svg)
 

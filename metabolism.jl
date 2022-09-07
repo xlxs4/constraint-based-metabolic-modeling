@@ -33,15 +33,8 @@ end
 
 ##
 # Save to IO.
-function writeio(data, dirname, filename)
-    open(constructpath(dirname, filename), "w") do io
-        write(io, data)
-    end
-    return nothing
-end
-
-function writeio(data, filename)
-    open(constructpath(filename), "w") do io
+function writeio(data, path)
+    open(path, "w") do io
         write(io, data)
     end
     return nothing
@@ -50,20 +43,12 @@ end
 
 ##
 # CSV IO.
-function readcsv(dirname, filename)
-    return CSV.File(constructpath(dirname, filename), stringtype=String) |> DataFrame
+function readcsv(path)
+    return CSV.File(path, stringtype=String) |> DataFrame
 end
 
-function readcsv(filename)
-    return CSV.File(constructpath(filename), stringtype=String) |> DataFrame
-end
-
-function writecsv(data, dirname, filename)
-    CSV.write(constructpath(dirname, filename), data)
-end
-
-function writecsv(data, filename)
-    CSV.write(constructpath(filename), data)
+function writecsv(data, path)
+    CSV.write(path, data)
 end
 ##
 
