@@ -5,7 +5,11 @@ using CairoMakie
 using Tulip # You can use other optimizers if you'd like, like GLPK.jl
 using Colors
 ##
-# TODO: add PNGs to README, also export the model (flux) results, etc.
+
+##
+using CSV
+##
+
 ##
 import Downloads
 ##
@@ -23,7 +27,9 @@ end
 function constructpath(filename)
     return joinpath(filename)
 end
+##
 
+##
 # Save to IO.
 function writeio(data, dirname, filename)
     open(constructpath(dirname, filename), "w") do io
@@ -31,6 +37,24 @@ function writeio(data, dirname, filename)
     end
     return nothing
   end
+##
+
+##
+function readcsv(dirname, filename)
+    return constructpath(dirname, filename) |> CSV.File |> Dict
+end
+
+function readcsv(filename)
+    return constructpath(filename) |> CSV.File |> Dict
+end
+
+function writecsv(data, dirname, filename)
+    CSV.write(constructpath(dirname, filename), data)
+end
+
+function writecsv(data, filename)
+    CSV.write(constructpath(filename), data)
+end
 ##
 
 ##
