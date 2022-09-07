@@ -5,7 +5,7 @@ using CairoMakie
 using Tulip # You can use other optimizers if you'd like, like GLPK.jl
 using Colors
 ##
-# TODO: fix only filename code duplication, check if file exists before downloading and upon save
+# TODO: check if file exists before downloading and upon save, extension-agnostic paths
 ##
 using CSV
 using DataFrames
@@ -134,10 +134,10 @@ end
 # Global paths.
 const ModelPath = constructpath("data", "e_coli_core.json")
 const MapPath = constructpath("data", "e_coli_core_map.json")
-const MetabolismPath = constructpath("results", "metabolism.pdf")
-const DefReactionsPath = constructpath("results", "default_reactions.pdf")
-const KOReactionsPath = constructpath("results", "ko_genes_reactions.pdf")
-const MaxEtOHReactionsPath = constructpath("results", "max_etoh_reactions.pdf")
+const MetabolismPath = constructpath(["results", "pdf"], "metabolism.pdf")
+const DefReactionsPath = constructpath(["results", "pdf"], "default_reactions.pdf")
+const KOReactionsPath = constructpath(["results", "pdf"], "ko_genes_reactions.pdf")
+const MaxEtOHReactionsPath = constructpath(["results", "pdf"], "max_etoh_reactions.pdf")
 ##
 
 ##
