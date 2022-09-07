@@ -55,7 +55,7 @@ function readcsv(dirname, filename)
 end
 
 function readcsv(filename)
-    return CSV.File(constructpath(filename), stringtype=String) |> Dict
+    return CSV.File(constructpath(filename), stringtype=String) |> DataFrame
 end
 
 function writecsv(data, dirname, filename)
