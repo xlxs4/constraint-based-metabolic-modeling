@@ -72,42 +72,31 @@ end
 
 ##
 # Visualize the metabolism.
-function vismetabolism(mappath, reaction_edge_color, resolution = (800, 600))
-    function _escherplot!(reaction_edge_color::Symbol)
-        escherplot!(
-            mappath; 
-            reaction_show_text = true,
-            reaction_edge_color = reaction_edge_color,
-            metabolite_show_text = true,
-            metabolite_node_colors = Dict("glc__D_e" => :red),
-            metabolite_node_color = :lightskyblue,
-        )
-
-        return nothing
-    end
-
-    function _escherplot!(reaction_edge_colors::AbstractDict)
-        escherplot!(
-            mappath; 
-            reaction_show_text = true,
-            reaction_edge_colors = reaction_edge_colors,
-            metabolite_show_text = true,
-            metabolite_node_colors = Dict("glc__D_e" => :red),
-            metabolite_node_color = :lightskyblue,
-        )
-
-        return nothing
-    end
-
-    f = Figure(resolution = resolution)
+function _vismetabolism(mappath; args...)
+    f = Figure()
     ax = Axis(f[1, 1])
 
-    _escherplot!(reaction_edge_color)
+    escherplot!(
+        mappath; 
+        reaction_show_text = true,
+        metabolite_show_text = true,
+        metabolite_node_colors = Dict("glc__D_e" => :red),
+        metabolite_node_color = :lightskyblue,
+        args...,
+    )
 
     hidexdecorations!(current_axis())
     hideydecorations!(current_axis())
 
     return current_figure()
+end
+
+function vismetabolism(mappath; reaction_edge_color::Symbol)
+    return _vismetabolism(mappath, reaction_edge_color = reaction_edge_color)
+end
+
+function vismetabolism(mappath; reaction_edge_colors::AbstractDict)
+    return _vismetabolism(mappath, reaction_edge_colors = reaction_edge_colors)
 end
 
 function generate_flux_edge_colors(fluxes, tolerance, color)
