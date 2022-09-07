@@ -6,6 +6,9 @@
 
 ![Default Metabolic Reaction Set](results/svg/default_reactions.svg)
 
+<details>
+<summary>Click to see results table</summary>
+
 |         Reaction         |    Flux     |
 |--------------------------|-------------|
 |          ACALD           | -5.65944e-9 |
@@ -104,9 +107,14 @@
 |           PPS            | 2.86618e-8  |
 |           FUM            |   5.06438   |
 
+</details>
+
 ---
 
 ![KO Cytochrome Oxidase Reaction Set](results/svg/ko_genes_reactions.svg)
+
+<details>
+<summary>Click to see results table</summary>
 
 |         Reaction         |     Flux     |
 |--------------------------|--------------|
@@ -206,9 +214,14 @@
 |           PPS            |  3.06496e-9  |
 |           FUM            | -7.28752e-9  |
 
+</details>
+
 ---
 
 ![Max Ethanol Production Reaction Set](results/svg/max_etoh_reactions.svg)
+
+<details>
+<summary>Click to see results table</summary>
 
 |         Reaction         |     Flux     |
 |--------------------------|--------------|
@@ -307,3 +320,5 @@
 |          GLUt2r          | -2.80789e-12 |
 |           PPS            |  0.0662497   |
 |           FUM            | -1.42832e-11 |
+
+</details>
