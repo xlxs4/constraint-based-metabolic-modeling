@@ -1,4 +1,32 @@
-# Constraint-based metabolic modeling
+# Constraint-based metabolic modeling using COBRA and FBA
+
+TODO: TL;DR description (technical)
+
+## Metabolism
+
+What is metabolism? It's a set of chemical reactions that can be found in organisms and are key for sustaining life.
+They are either reactions that *break down* things (compounds such as glucose) or *synthesize* things (compounds such as proteins, carbohydrates, lipids and nucleic acids).
+Usually, breaking compounds down releases energy, while synthesizing compounds consumes energy.
+This energy flow (or flux) happens under very specific rules, as all organisms obey the laws of thermodynamics.
+The second law states that in an isolated system the amount of entropy cannot decrease, which seems to contradict the complexity that can be found in living systems.
+The key here is that organisms are, in fact, open systems, which exchange matter and energy with their environment; dissipative systems that maintain complexity by increasing the entropy of their environment.
+The metabolism of a cell achieves this by coupling the spontaneous processes of breaking down things, with the non-spontaneous processes of synthesizing things.
+Some example mechanisms are [bacteriorhodopsin](https://pdb101.rcsb.org/motm/27), or the [redox loop](https://www.sciencedirect.com/science/article/pii/S0014579303003892#:~:text=Redox%20loops%20are%20found%20in,opposite%20sides%20of%20the%20membrane.). You can see [this](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5389199/) for an example.
+
+These chemical reactions are organized into metabolic pathways, along which a chemical gets transformed into another chemical through a series of steps.
+Each step happens with the help of an enzyme, which is exactly what couples the reactions to other more thermodynamically favorable ones, catalyze the reactions so that they proceed faster, and regulate the rate at which they occur.
+The basic metabolic pathways are found among vastly different species.
+For example, the set of carboxylic acids that are best known as the intermediates in the citric acid cycle are present in all known organisms.
+Central pathways of metabolism, such as glycolysis and the citric acid cycle, are present in all three domains of living things and were present in the last universal common ancestor (LUCA).
+Understanding how metabolism came to be and whether it can actually kickstart life ([example](https://www.pnas.org/doi/full/10.1073/pnas.0912628107)) is another topic of great study, and while it is a very complex process with a lot of participating intertwined mechanisms, it could have originated as something [much simpler](https://www.nature.com/articles/s41557-020-00560-7). Also see [this](https://www.nature.com/articles/nature19776).
+
+Through metabolism we can also produce biofuels ([here](https://www.science.org/doi/10.1126/science.1114736), [here](https://link.springer.com/article/10.1007/s00253-007-1163-x) and [here](https://www.sciencedirect.com/science/article/pii/S0092867421000957)) or [healthy food](https://www.sciencedirect.com/science/article/pii/S1096717620300331), [biopolymers](https://www.sciencedirect.com/science/article/pii/S1096717619300886), [amino acids](https://www.sciencedirect.com/science/article/pii/S1096717619301004) and more.
+
+## TODO: Math stuff
+
+## TODO: Code stuff
+
+## TODO: Results
 
 Workflow oneliner examples using various util functions:
 
