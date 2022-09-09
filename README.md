@@ -32,7 +32,7 @@ In other words, we need to better understand how, systematically, changes at the
 
 To do this, we can use a great variety of techniques, some of which can be found [here](https://www.nature.com/articles/nrg3643).
 We use something called COBRA (COnstraint-Based Reconstruction and Analysis) which means you gather details on all of the chemical reactions that are encoded for by the genes of the organisms; the reactions [are linked to specific genes](https://www.nature.com/articles/nbt.3956).
-Then, we can use an optimization technique called [Flux Balance Analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3108565/) to predict how the enzymes work, and thus to predict how the reaction set would change if the genes were modified.
+Then, we can use an optimization technique called [Flux Balance Analysis](https://www.nature.com/articles/nbt.1614) to predict how the enzymes work, and thus to predict how the reaction set would change if the genes were modified.
 
 The model used in this repository is a [toy model](https://journals.asm.org/doi/10.1128/ecosalplus.10.2.1) of some parts of the central metabolism of *Escherichia Coli*.
 It includes glycolysis, the TCA or CAC or Krebs cycle, and the electron transport chain:
@@ -46,8 +46,16 @@ These are what's called the biomass objective function, which is a pseudo reacti
 This is an assumption due to the constraint-based approaches requiring the organisms to have adapted their metabolism, through evolution, to optimize some objective.
 The specific assumption taken to hold here is that the metabolism has been tuned to maximize growth rate (biomass).
 There initiallly were some studies showing that optimizing the assumed objective function for growth ([here](https://www.nature.com/articles/nature01149)) and for energy use ([here](https://pubmed.ncbi.nlm.nih.gov/15052634/) and [here](https://pubmed.ncbi.nlm.nih.gov/14705007/)) you could predict the metabolic fluxes.
-Other studies seemed to question this universality ([here]((https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003091), [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1949037/) and [here](https://pubmed.ncbi.nlm.nih.gov/19888218/)).
+Other studies seemed to question this universality ([here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003091), [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1949037/) and [here](https://pubmed.ncbi.nlm.nih.gov/19888218/)).
 Today the representation of the *in vivo* fluxes is thought of as a Pareto surface created from combining three objective functions: maximizing biomass and ATP generation, and minimizing the fluxes across the whole network ([here](https://www.science.org/doi/10.1126/science.1216882)).
+
+In FBA, the reaction network is represented in the compact form of a stoichiometric matrix ($S$), as is common, with $m$ rows and $n$ columns, for $n$ chemical reactions and $m$ participating compounds.
+The column entries are the stoichiometric coefficients of the metabolites that participate in the corresponding reaction, where there's a negative coefficient if the metabolite is consumed and a positive coefficient if it's produced.
+If a metabolite does not participate in a chemical reaction, the corresponding stoichiometric coefficient is zero.
+$S$ is a sparse matrix, since the reactions usually involve only a handful of metabolites.
+The flux through all the reactions across the network is represented by a vector $v$, of length $n$, for the $n$ reactions.
+Respectively, a vector $x$ with length $m$ represents the concentrations of all the metabolites.
+You can get the system containing all mass balance equations at steady state by solving for $$\frac{dx}{dt}$$
 
 ## TODO: Code stuff
 
