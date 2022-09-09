@@ -7,7 +7,7 @@ TODO: TL;DR description (technical)
 What is metabolism? It's a set of chemical reactions that can be found in organisms and are key for sustaining life.
 They are either reactions that *break down* things (compounds such as glucose) or *synthesize* things (compounds such as proteins, carbohydrates, lipids and nucleic acids).
 Usually, breaking compounds down releases energy, while synthesizing compounds consumes energy.
-This energy flow (or flux) happens under very specific rules, as all organisms obey the laws of thermodynamics.
+This energy flow happens under very specific rules, as all organisms obey the laws of thermodynamics.
 The second law states that in an isolated system the amount of entropy cannot decrease, which seems to contradict the complexity that can be found in living systems.
 The key here is that organisms are, in fact, open systems, which exchange matter and energy with their environment; dissipative systems that maintain complexity by increasing the entropy of their environment.
 The metabolism of a cell achieves this by coupling the spontaneous processes of breaking down things, with the non-spontaneous processes of synthesizing things.
@@ -23,6 +23,18 @@ Understanding how metabolism came to be and whether it can actually kickstart li
 Through metabolism we can also produce biofuels ([here](https://www.science.org/doi/10.1126/science.1114736), [here](https://link.springer.com/article/10.1007/s00253-007-1163-x) and [here](https://www.sciencedirect.com/science/article/pii/S0092867421000957)) or [healthy food](https://www.sciencedirect.com/science/article/pii/S1096717620300331), [biopolymers](https://www.sciencedirect.com/science/article/pii/S1096717619300886), [amino acids](https://www.sciencedirect.com/science/article/pii/S1096717619301004) and more.
 
 ## TODO: Math stuff
+
+The enzymes that facilitate all of these chemical reactions are produced through a process which involves some cell genes.
+How much of an enzyme is produced has to do with how much the corresponding gene or genes are used (expressed).
+Recent advances in Synthetic Biology (such as [being able to modify a single DNA base](https://www.nature.com/articles/nature24644), [rapidly delete endogenous genes](https://www.nature.com/articles/srep17874), [insert entirely new genes](https://www.science.org/doi/full/10.1126/science.aac9373), or onto something more metabolism-related, [regulate enzyme expression](https://www.sciencedirect.com/science/article/pii/S240547122030418X)) mean that we now can directly intervene and change a cell to have it do our bidding.
+That means we now have to understand what exactly to change in the cell to have the desirable results.
+In other words, we need to better understand how, systematically, changes at the gene level affect an organism's metabolism.
+
+To do this, we can use a great variety of techniques, some of which can be found [here](https://www.nature.com/articles/nrg3643).
+We use something called COBRA (COnstraint-Based Reconstruction and Analysis) which means you gather details on all of the chemical reactions that are encoded for by the genes of the organisms; the reactions [are linked to specific genes](https://www.nature.com/articles/nbt.3956).
+Then, we can use an optimization technique called [Flux Balance Analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3108565/) to predict how the enzymes work, and thus to predict how the reaction set would change if the genes were modified.
+
+TODO: Continue
 
 ## TODO: Code stuff
 
