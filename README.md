@@ -49,13 +49,33 @@ There initiallly were some studies showing that optimizing the assumed objective
 Other studies seemed to question this universality ([here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003091), [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1949037/) and [here](https://pubmed.ncbi.nlm.nih.gov/19888218/)).
 Today the representation of the *in vivo* fluxes is thought of as a Pareto surface created from combining three objective functions: maximizing biomass and ATP generation, and minimizing the fluxes across the whole network ([here](https://www.science.org/doi/10.1126/science.1216882)).
 
-In FBA, the reaction network is represented in the compact form of a stoichiometric matrix ($S$), as is common, with $m$ rows and $n$ columns, for $n$ chemical reactions and $m$ participating compounds.
+In FBA, the reaction network is represented in the compact form of a stoichiometric matrix ( $S$ ), as is common, with $m$ rows and $n$ columns, for $n$ chemical reactions and $m$ participating compounds.
 The column entries are the stoichiometric coefficients of the metabolites that participate in the corresponding reaction, where there's a negative coefficient if the metabolite is consumed and a positive coefficient if it's produced.
 If a metabolite does not participate in a chemical reaction, the corresponding stoichiometric coefficient is zero.
 $S$ is a sparse matrix, since the reactions usually involve only a handful of metabolites.
 The flux through all the reactions across the network is represented by a vector $v$, of length $n$, for the $n$ reactions.
 Respectively, a vector $x$ with length $m$ represents the concentrations of all the metabolites.
-You can get the system containing all mass balance equations at steady state by solving for $$\frac{dx}{dt}$$
+You can get the system containing all mass balance equations at steady state by solving for $$\frac{dx}{dt} = 0$$
+
+---
+
+$$Sv = 0$$
+
+Any vector $v$ that satisfies this equation is in the null space of $S$.
+In realistic, large-scale models, there are more reactions than there are compounds ( $n > m$ ) which means there are more unknown variables in the system than equations, so there is no single, unique solution to this system.
+The solution space is defined by imposing the $Sv = 0$ mass balance constraints and capacity constraints imposed by manually selected lower and upper bounds.
+What FBA does is it looks into specific points within that solution space.
+For instance, while you might have various viable configurations, you might be interested to see which point within the solution space corresponds to maximizing biomass production, or maximizing the production of a compound, given the already present collection of constraints.
+
+FBA, as a method that seeks to identify optimal points within a constrained space, optimizes an objective function $$ Z = c^Tv $$
+
+This can generally be any (linear) combination of fluxes, with $c$ being a vector containing weights that indicate how much a chemical reaction contributes to the objective function.
+If optimizing only for a single reaction, e.g. biomass production, $c$ will be a vector of zeros with an entry of one only at the position of the reaction optimizing for.
+
+Lastly, to optimize this system linear programming methods are used to solve $ Sv = 0 $, given the set of lower and upper bounds on $ v $ and a linear combination of fluxes as an objective function.
+The resulting flux distribution $v$ maximizes or minimizes the selected objective function.
+Because FBA reduces the large-scale, complex metabolic model to a linear program, it is quite performant and scales well.
+The FBA computations fall into the broader category of COnstraint-Based Reconstruction and Analysis (COBRA) methods.
 
 ## TODO: Code stuff
 
