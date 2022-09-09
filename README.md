@@ -22,7 +22,7 @@ Understanding how metabolism came to be and whether it can actually kickstart li
 
 Through metabolism we can also produce biofuels ([here](https://www.science.org/doi/10.1126/science.1114736), [here](https://link.springer.com/article/10.1007/s00253-007-1163-x) and [here](https://www.sciencedirect.com/science/article/pii/S0092867421000957)) or [healthy food](https://www.sciencedirect.com/science/article/pii/S1096717620300331), [biopolymers](https://www.sciencedirect.com/science/article/pii/S1096717619300886), [amino acids](https://www.sciencedirect.com/science/article/pii/S1096717619301004) and more.
 
-## TODO: Math stuff
+## Framework
 
 The enzymes that facilitate all of these chemical reactions are produced through a process which involves some cell genes.
 How much of an enzyme is produced has to do with how much the corresponding gene or genes are used (expressed).
@@ -67,19 +67,33 @@ The solution space is defined by imposing the $Sv = 0$ mass balance constraints 
 What FBA does is it looks into specific points within that solution space.
 For instance, while you might have various viable configurations, you might be interested to see which point within the solution space corresponds to maximizing biomass production, or maximizing the production of a compound, given the already present collection of constraints.
 
-FBA, as a method that seeks to identify optimal points within a constrained space, optimizes an objective function $$ Z = c^Tv $$
+FBA, as a method that seeks to identify optimal points within a constrained space, optimizes an objective function $$Z = c^Tv$$
 
 This can generally be any (linear) combination of fluxes, with $c$ being a vector containing weights that indicate how much a chemical reaction contributes to the objective function.
 If optimizing only for a single reaction, e.g. biomass production, $c$ will be a vector of zeros with an entry of one only at the position of the reaction optimizing for.
 
-Lastly, to optimize this system linear programming methods are used to solve $ Sv = 0 $, given the set of lower and upper bounds on $ v $ and a linear combination of fluxes as an objective function.
+Lastly, to optimize this system linear programming methods are used to solve $Sv = 0$, given the set of lower and upper bounds on $v$ and a linear combination of fluxes as an objective function.
 The resulting flux distribution $v$ maximizes or minimizes the selected objective function.
 Because FBA reduces the large-scale, complex metabolic model to a linear program, it is quite performant and scales well.
 The FBA computations fall into the broader category of COnstraint-Based Reconstruction and Analysis (COBRA) methods.
 
-## TODO: Code stuff
+## Implementation
 
-## TODO: Results
+This project uses [COBREXA.jl](https://lcsb-biocore.github.io/COBREXA.jl/stable/) (COnstraint-Based Reconstruction and EXascale Analysis), a Julia package, for the computational work; while the backbone - the optimizer - chosen is [Tulip.jl](https://github.com/ds4dm/Tulip.jl), an interior-point solver for linear optimization written purely in Julia.
+You can use other solvers if you'd like, as long as it's supported by JuMP; see [this](https://jump.dev/JuMP.jl/stable/installation/#Supported-solvers).
+It also uses [Escher.jl](https://github.com/stelmo/Escher.jl), a Julia package that is essentially a [Makie.jl](https://makie.juliaplots.org/stable/index.html) [recipe](https://makie.juliaplots.org/stable/documentation/recipes/) to plot maps of metabolic models.
+Lastly, [`CSV.jl`](https://github.com/JuliaData/CSV.jl) is used for importing and exporting the FBA results, [`DataFrames.jl`](https://dataframes.juliadata.org/stable/) are used to have a common data structure for the various processing functions, and [`PrettyTables.jl`](https://github.com/ronisbr/PrettyTables.jl) is used to export the results as Markdown tables.
+
+There are some utility functions defined:
+
+- `constructpath` which allows you to easily generate a valid path for your OS to play around with importing and exporting files, as well as downloads
+- `writeio`, to save data to a file. This is used for example to write the results as markdown tables
+- `readcsv` and `writecsv`, to import/export data in CSV form
+- `tomarkdown`, to convert the results to a markdown table
+- `fluxes_to_df` and `df_to_fluxes`, to help with converting back and from a structure COBREXA uses, to a more general-purpose data structure for IO, etc.
+- `vismetabolism`, which uses Escher to generate a metabolic map with sensible defaults, and `generate_flux_edge_colors` to help color the reactions according to a customizable tolerance
+
+---
 
 Workflow oneliner examples using various util functions:
 
@@ -87,6 +101,12 @@ Workflow oneliner examples using various util functions:
 - `writeio(readcsv(constructpath(["results", "csv"], "max_etoh_reactions.csv")) |> tomarkdown, constructpath(["results", "markdown"], "max_etoh_reactions.md"))`
 
 ---
+
+The rest is pretty straightforward: The toy model gets downloaded and loaded into COBREXA in [`StandardModel`](https://lcsb-biocore.github.io/COBREXA.jl/stable/functions/types/#COBREXA.StandardModel) form, we simulate the growth of *E. coli* under some default conditions (aerobic, glucose fed) and use FBA to predict its growth rate and active chemical reactions.
+FBA is performed again, but with some KO genes and with additional constraints to maximize for a specific point in solution space.
+The resulting metabolic maps are saved by default, if not already present.
+
+## TODO: Results
 
 ![Default Metabolic Reaction Set](results/svg/default_reactions.svg)
 
