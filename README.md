@@ -1,6 +1,10 @@
 # Constraint-based metabolic modeling using COBRA and FBA
 
-TODO: TL;DR description (technical)
+A project using a [toy model](https://journals.asm.org/doi/10.1128/ecosalplus.10.2.1) of some parts of the central metabolism of *Escherichia Coli* to apply COBRA, and specifically FBA, and predict the active chemical reactions under default conditions (aerobic, glucose fed), how the metabolism changes when genes that encode for cytochrome oxidases (bo and putative) are KO (switch from respiration to fermentation), and how FBA can be used to identify a single point in the constrained search space, specifically to maximize ethanol production while ensuring the organism can still grow.
+The model includes glycolysis, the TCA or CAC or Krebs cycle, and the electron transport chain.
+This project uses the [Julia language](https://julialang.org/) and two main Julia packages: [COBREXA.jl](https://lcsb-biocore.github.io/COBREXA.jl/stable/) and [Escher.jl](https://github.com/stelmo/Escher.jl).
+The results are included as CSVs and markdown tables, and visualizations in the form of metabolic maps are also included in SVG and PDF form.
+Some utility functions have also been defined for a more seamless exploratory pipeline.
 
 ## Metabolism
 
