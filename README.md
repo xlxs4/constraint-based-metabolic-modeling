@@ -1,6 +1,6 @@
 # Constraint-based metabolic modeling using COBRA and FBA
 
-A project using a [toy model](https://journals.asm.org/doi/10.1128/ecosalplus.10.2.1) of some parts of the central metabolism of *Escherichia Coli* to apply COBRA, and specifically FBA, and predict the active chemical reactions under default conditions (aerobic, glucose fed), how the metabolism changes when genes that encode for cytochrome oxidases (bo and putative) are KO (switch from respiration to fermentation), and how FBA can be used to identify a single point in the constrained search space, specifically to maximize ethanol production while ensuring the organism can still grow.
+A project using a [toy model](https://journals.asm.org/doi/10.1128/ecosalplus.10.2.1)[^1] of some parts of the central metabolism of *Escherichia Coli* to apply COBRA, and specifically FBA, and predict the active chemical reactions under default conditions (aerobic, glucose fed), how the metabolism changes when genes that encode for cytochrome oxidases (bo and putative) are KO (switch from respiration to fermentation), and how FBA can be used to identify a single point in the constrained search space, specifically to maximize ethanol production while ensuring the organism can still grow.
 The model includes glycolysis, the TCA or CAC or Krebs cycle, and the electron transport chain.
 This project uses the [Julia language](https://julialang.org/) and two main Julia packages: [COBREXA.jl](https://lcsb-biocore.github.io/COBREXA.jl/stable/) and [Escher.jl](https://github.com/stelmo/Escher.jl).
 The results are included as CSVs and markdown tables, and visualizations in the form of metabolic maps are also included in SVG and PDF form.
@@ -15,28 +15,28 @@ This energy flow happens under very specific rules, as all organisms obey the la
 The second law states that in an isolated system the amount of entropy cannot decrease, which seems to contradict the complexity that can be found in living systems.
 The key here is that organisms are, in fact, open systems, which exchange matter and energy with their environment; dissipative systems that maintain complexity by increasing the entropy of their environment.
 The metabolism of a cell achieves this by coupling the spontaneous processes of breaking down things, with the non-spontaneous processes of synthesizing things.
-Some example mechanisms are [bacteriorhodopsin](https://pdb101.rcsb.org/motm/27), or the [redox loop](https://www.sciencedirect.com/science/article/pii/S0014579303003892#:~:text=Redox%20loops%20are%20found%20in,opposite%20sides%20of%20the%20membrane.). You can see [this](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5389199/) for an example.
+Some example mechanisms are [bacteriorhodopsin](https://pdb101.rcsb.org/motm/27), or the [redox loop](https://www.sciencedirect.com/science/article/pii/S0014579303003892)[^2]. You can see [this](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5389199/)[^3] for an example.
 
 These chemical reactions are organized into metabolic pathways, along which a chemical gets transformed into another chemical through a series of steps.
 Each step happens with the help of an enzyme, which is exactly what couples the reactions to other more thermodynamically favorable ones, catalyze the reactions so that they proceed faster, and regulate the rate at which they occur.
 The basic metabolic pathways are found among vastly different species.
 For example, the set of carboxylic acids that are best known as the intermediates in the citric acid cycle are present in all known organisms.
 Central pathways of metabolism, such as glycolysis and the citric acid cycle, are present in all three domains of living things and were present in the last universal common ancestor (LUCA).
-Understanding how metabolism came to be and whether it can actually kickstart life ([example](https://www.pnas.org/doi/full/10.1073/pnas.0912628107)) is another topic of great study, and while it is a very complex process with a lot of participating intertwined mechanisms, it could have originated as something [much simpler](https://www.nature.com/articles/s41557-020-00560-7). Also see [this](https://www.nature.com/articles/nature19776).
+Understanding how metabolism came to be and whether it can actually kickstart life ([example](https://www.pnas.org/doi/full/10.1073/pnas.0912628107)[^4]) is another topic of great study, and while it is a very complex process with a lot of participating intertwined mechanisms, it could have originated as something [much simpler](https://www.nature.com/articles/s41557-020-00560-7)[^5]. Also see [this](https://www.nature.com/articles/nature19776)[^6].
 
-Through metabolism we can also produce biofuels ([here](https://www.science.org/doi/10.1126/science.1114736), [here](https://link.springer.com/article/10.1007/s00253-007-1163-x) and [here](https://www.sciencedirect.com/science/article/pii/S0092867421000957)) or [healthy food](https://www.sciencedirect.com/science/article/pii/S1096717620300331), [biopolymers](https://www.sciencedirect.com/science/article/pii/S1096717619300886), [amino acids](https://www.sciencedirect.com/science/article/pii/S1096717619301004) and more.
+Through metabolism we can also produce biofuels ([here](https://www.science.org/doi/10.1126/science.1114736)[^7], [here](https://link.springer.com/article/10.1007/s00253-007-1163-x)[^8] and [here](https://www.sciencedirect.com/science/article/pii/S0092867421000957)[^9]) or [healthy food](https://www.sciencedirect.com/science/article/pii/S1096717620300331)[^10], [biopolymers](https://www.sciencedirect.com/science/article/pii/S1096717619300886)[^11], [amino acids](https://www.sciencedirect.com/science/article/pii/S1096717619301004)[^12] and more.
 
 ## Framework
 
 The enzymes that facilitate all of these chemical reactions are produced through a process which involves some cell genes.
 How much of an enzyme is produced has to do with how much the corresponding gene or genes are used (expressed).
-Recent advances in Synthetic Biology (such as [being able to modify a single DNA base](https://www.nature.com/articles/nature24644), [rapidly delete endogenous genes](https://www.nature.com/articles/srep17874), [insert entirely new genes](https://www.science.org/doi/full/10.1126/science.aac9373), or onto something more metabolism-related, [regulate enzyme expression](https://www.sciencedirect.com/science/article/pii/S240547122030418X)) mean that we now can directly intervene and change a cell to have it do our bidding.
+Recent advances in Synthetic Biology (such as [being able to modify a single DNA base](https://www.nature.com/articles/nature24644)[^13], [rapidly delete endogenous genes](https://www.nature.com/articles/srep17874)[^14], [insert entirely new genes](https://www.science.org/doi/full/10.1126/science.aac9373)[^15], or onto something more metabolism-related, [regulate enzyme expression](https://www.sciencedirect.com/science/article/pii/S240547122030418X)[^16]) mean that we now can directly intervene and change a cell to have it do our bidding.
 That means we now have to understand what exactly to change in the cell to have the desirable results.
 In other words, we need to better understand how, systematically, changes at the gene level affect an organism's metabolism.
 
-To do this, we can use a great variety of techniques, some of which can be found [here](https://www.nature.com/articles/nrg3643).
-We use something called COBRA (COnstraint-Based Reconstruction and Analysis) which means you gather details on all of the chemical reactions that are encoded for by the genes of the organisms; the reactions [are linked to specific genes](https://www.nature.com/articles/nbt.3956).
-Then, we can use an optimization technique called [Flux Balance Analysis](https://www.nature.com/articles/nbt.1614) to predict how the enzymes work, and thus to predict how the reaction set would change if the genes were modified.
+To do this, we can use a great variety of techniques, some of which can be found [here](https://www.nature.com/articles/nrg3643)[^17].
+We use something called COBRA (COnstraint-Based Reconstruction and Analysis) which means you gather details on all of the chemical reactions that are encoded for by the genes of the organisms; the reactions [are linked to specific genes](https://www.nature.com/articles/nbt.3956)[^18].
+Then, we can use an optimization technique called [Flux Balance Analysis](https://www.nature.com/articles/nbt.1614)[^19] to predict how the enzymes work, and thus to predict how the reaction set would change if the genes were modified.
 
 The model used in this repository is a [toy model](https://journals.asm.org/doi/10.1128/ecosalplus.10.2.1) of some parts of the central metabolism of *Escherichia Coli*.
 It includes glycolysis, the TCA or CAC or Krebs cycle, and the electron transport chain:
@@ -49,9 +49,9 @@ The majority of these reactions actually exist in *E. coli*, but not those lumpe
 These are what's called the biomass objective function, which is a pseudo reaction that groups all the processes that weren't modeled and that convert the metabolites generated by what's been modeled into biomass. 
 This is an assumption due to the constraint-based approaches requiring the organisms to have adapted their metabolism, through evolution, to optimize some objective.
 The specific assumption taken to hold here is that the metabolism has been tuned to maximize growth rate (biomass).
-There initiallly were some studies showing that optimizing the assumed objective function for growth ([here](https://www.nature.com/articles/nature01149)) and for energy use ([here](https://pubmed.ncbi.nlm.nih.gov/15052634/) and [here](https://pubmed.ncbi.nlm.nih.gov/14705007/)) you could predict the metabolic fluxes.
-Other studies seemed to question this universality ([here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003091), [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1949037/) and [here](https://pubmed.ncbi.nlm.nih.gov/19888218/)).
-Today the representation of the *in vivo* fluxes is thought of as a Pareto surface created from combining three objective functions: maximizing biomass and ATP generation, and minimizing the fluxes across the whole network ([here](https://www.science.org/doi/10.1126/science.1216882)).
+There initiallly were some studies showing that optimizing the assumed objective function for growth ([here](https://www.nature.com/articles/nature01149)[^20]) and for energy use ([here](https://pubmed.ncbi.nlm.nih.gov/15052634/)[^21] and [here](https://pubmed.ncbi.nlm.nih.gov/14705007/)[^22]) you could predict the metabolic fluxes.
+Other studies seemed to question this universality ([here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003091)[^23], [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1949037/)[^24] and [here](https://pubmed.ncbi.nlm.nih.gov/19888218/)[^25]).
+Today the representation of the *in vivo* fluxes is thought of as a Pareto surface created from combining three objective functions: maximizing biomass and ATP generation, and minimizing the fluxes across the whole network ([here](https://www.science.org/doi/10.1126/science.1216882)[^26]).
 
 In FBA, the reaction network is represented in the compact form of a stoichiometric matrix ( $S$ ), as is common, with $m$ rows and $n$ columns, for $n$ chemical reactions and $m$ participating compounds.
 The column entries are the stoichiometric coefficients of the metabolites that participate in the corresponding reaction, where there's a negative coefficient if the metabolite is consumed and a positive coefficient if it's produced.
@@ -255,8 +255,8 @@ Now, we can knockout (remove) two genes, [b0978](https://biocyc.org/gene?orgid=E
 
 ![KO Cytochrome Oxidase Reaction Set](results/svg/ko_genes_reactions.svg)
 
-The metabolism has now been drastically altered, since the cell is now [forced to use a different process](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2607145/), called fermentation, to grow.
-A side-effect of this change is that the cell physiology has changed significantly, and it's growing with a smaller rate (0.21 1/h), but it also produces ethanol and acetate, which can be used as [biofuels](https://www.nature.com/articles/s41598-022-09148-2), among others.
+The metabolism has now been drastically altered, since the cell is now [forced to use a different process](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2607145/)[^27], called fermentation, to grow.
+A side-effect of this change is that the cell physiology has changed significantly, and it's growing with a smaller rate (0.21 1/h), but it also produces ethanol and acetate, which can be used as [biofuels](https://www.nature.com/articles/s41598-022-09148-2)[^28], among others.
 
 <details>
 <summary>Click to see results table</summary>
@@ -485,3 +485,32 @@ No problem:
 |           FUM            | -1.42832e-11 |
 
 </details>
+
+[^1]: Orth, J. D., Fleming, R. M., & Palsson, B. Ø. (2010). Reconstruction and use of microbial metabolic networks: the core Escherichia coli metabolic model as an educational guide. EcoSal plus, 4(1).
+[^2]: Jormakka, M., Byrne, B., & Iwata, S. (2003). Protonmotive force generation by a redox loop mechanism. FEBS letters, 545(1), 25-30.
+[^3]: Pross, A., & Pascal, R. (2017). How and why kinetics, thermodynamics, and chemistry induce the logic of biological evolution. Beilstein journal of organic chemistry, 13(1), 665-674.
+[^4]: Vasas, V., Szathmáry, E., & Santos, M. (2010). Lack of evolvability in self-sustaining autocatalytic networks constraints metabolism-first scenarios for the origin of life. Proceedings of the National Academy of Sciences, 107(4), 1470-1475.
+[^5]: Stubbs, R. T., Yadav, M., Krishnamurthy, R., & Springsteen, G. (2020). A plausible metal-free ancestral analogue of the Krebs cycle composed entirely of α-ketoacids. Nature chemistry, 12(11), 1016-1022.
+[^6]: Semenov, S. N., Kraft, L. J., Ainla, A., Zhao, M., Baghbanzadeh, M., Campbell, V. E., ... & Whitesides, G. M. (2016). Autocatalytic, bistable, oscillatory networks of biologically relevant organic reactions. Nature, 537(7622), 656-660.
+[^7]: Ragauskas, A. J., Williams, C. K., Davison, B. H., Britovsek, G., Cairney, J., Eckert, C. A., ... & Tschaplinski, T. (2006). The path forward for biofuels and biomaterials. science, 311(5760), 484-489.
+[^8]: Antoni, D., Zverlov, V. V., & Schwarz, W. H. (2007). Biofuels from microbes. Applied microbiology and biotechnology, 77(1), 23-35.
+[^9]: Liu, Y., Cruz-Morales, P., Zargar, A., Belcher, M. S., Pang, B., Englund, E., ... & Keasling, J. D. (2021). Biofuels for a sustainable future. Cell, 184(6), 1636-1647.
+[^10]: Kaur, N., Alok, A., Kumar, P., Kaur, N., Awasthi, P., Chaturvedi, S., ... & Tiwari, S. (2020). CRISPR/Cas9 directed editing of lycopene epsilon-cyclase modulates metabolic flux for β-carotene biosynthesis in banana fruit. Metabolic engineering, 59, 76-86.
+[^11]: Choi, S. Y., Rhie, M. N., Kim, H. T., Joo, J. C., Cho, I. J., Son, J., ... & Park, S. J. (2020). Metabolic engineering for the synthesis of polyesters: A 100-year journey from polyhydroxyalkanoates to non-natural microbial polyesters. Metabolic engineering, 58, 47-81.
+[^12]: Wendisch, V. F. (2020). Metabolic engineering advances and prospects for amino acid production. Metabolic engineering, 58, 17-34.
+[^13]: Gaudelli, N. M., Komor, A. C., Rees, H. A., Packer, M. S., Badran, A. H., Bryson, D. I., & Liu, D. R. (2017). Programmable base editing of A• T to G• C in genomic DNA without DNA cleavage. Nature, 551(7681), 464-471.
+[^14]: Jensen, S. I., Lennen, R. M., Herrgård, M. J., & Nielsen, A. T. (2015). Seven gene deletions in seven days: fast generation of Escherichia coli strains tolerant to acetate and osmotic stress. Scientific reports, 5(1), 1-10.
+[^15]: Galanie, S., Thodey, K., Trenchard, I. J., Filsinger Interrante, M., & Smolke, C. D. (2015). Complete biosynthesis of opioids in yeast. Science, 349(6252), 1095-1100.
+[^16]: Donati, S., Kuntz, M., Pahl, V., Farke, N., Beuter, D., Glatter, T., ... & Link, H. (2021). Multi-omics analysis of CRISPRi-knockdowns identifies mechanisms that buffer decreases of enzymes in E. coli metabolism. Cell Systems, 12(1), 56-67.
+[^17]: Bordbar, A., Monk, J. M., King, Z. A., & Palsson, B. O. (2014). Constraint-based models predict metabolic and associated cellular functions. Nature Reviews Genetics, 15(2), 107-120.
+[^18]: Monk, J. M., Lloyd, C. J., Brunk, E., Mih, N., Sastry, A., King, Z., ... & Palsson, B. O. (2017). iML1515, a knowledgebase that computes Escherichia coli traits. Nature biotechnology, 35(10), 904-908.
+[^19]: Orth, J. D., Thiele, I., & Palsson, B. Ø. (2010). What is flux balance analysis?. Nature biotechnology, 28(3), 245-248.
+[^20]: Ibarra, R. U., Edwards, J. S., & Palsson, B. O. (2002). Escherichia coli K-12 undergoes adaptive evolution to achieve in silico predicted optimal growth. Nature, 420(6912), 186-189.
+[^21]: Carlson, R., & Srienc, F. (2004). Fundamental Escherichia coli biochemical pathways for biomass and energy production: creation of overall flux states. Biotechnology and bioengineering, 86(2), 149-162.
+[^22]: Carlson, R., & Srienc, F. (2004). Fundamental Escherichia coli biochemical pathways for biomass and energy production: identification of reactions. Biotechnology and bioengineering, 85(1), 1-19.
+[^23]: Harcombe, W. R., Delaney, N. F., Leiby, N., Klitgord, N., & Marx, C. J. (2013). The ability of flux balance analysis to predict evolution of central metabolism scales with the initial distance to the optimum. PLoS computational biology, 9(6), e1003091.
+[^24]: Schuetz, R., Kuepfer, L., & Sauer, U. (2007). Systematic evaluation of objective functions for predicting intracellular fluxes in Escherichia coli. Molecular systems biology, 3(1), 119.
+[^25]: Molenaar, D., Van Berlo, R., De Ridder, D., & Teusink, B. (2009). Shifts in growth strategies reflect tradeoffs in cellular economics. Molecular systems biology, 5(1), 323.
+[^26]: Schuetz, R., Zamboni, N., Zampieri, M., Heinemann, M., & Sauer, U. (2012). Multidimensional optimality of microbial metabolism. Science, 336(6081), 601-604.
+[^27]: Portnoy, V. A., Herrgård, M. J., & Palsson, B. Ø. (2008). Aerobic fermentation of D-glucose by an evolved cytochrome oxidase-deficient Escherichia coli strain. Applied and environmental microbiology, 74(24), 7561-7569.
+[^28]: Padmanabhan, S., Giridharan, K., Stalin, B., Kumaran, S., Kavimani, V., Nagaprasad, N., ... & Krishnaraj, R. (2022). Energy recovery of waste plastics into diesel fuel with ethanol and ethoxy ethyl acetate additives on circular economy strategy. Scientific Reports, 12(1), 1-13.
