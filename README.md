@@ -106,9 +106,28 @@ The rest is pretty straightforward: The toy model gets downloaded and loaded int
 FBA is performed again, but with some KO genes and with additional constraints to maximize for a specific point in solution space.
 The resulting metabolic maps are saved by default, if not already present.
 
-## TODO: Results
+## Results
+
+```julia
+# Simulate E. coli growth.
+const model = load_model(StandardModel, ModelPath)
+# Flux Balance Analysis (FBA).
+const fluxes = flux_balance_analysis_dict(model, Tulip.Optimizer)
+
+# Save control metabolic reactions graph.
+const tolerance = 1e-3
+!isfile(DefReactionsPath) && save(DefReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(fluxes, tolerance, :red)))
+```
+
+At first, we can load the simulated growth in default conditions (aerobic, glucose fed) and perform FBA to predict the cell's growth rate and chemical reactions.
+We can then generate the metabolic map with the active chemical reactions highlighted in red:
 
 ![Default Metabolic Reaction Set](results/svg/default_reactions.svg)
+
+The model predicts a growth rate of 0.87 1/h when the cell metabolizes 10 mmol glucose/gDW/h.
+This is fairly close to the corresponding experimental results.
+Some of the reactions are not used (grey dashed lines), which is expected since the metabolism is actively regulated to better perform in the current environment.
+Specifically, the cell uses respiration to produce energy.
 
 <details>
 <summary>Click to see results table</summary>
@@ -215,7 +234,25 @@ The resulting metabolic maps are saved by default, if not already present.
 
 ---
 
+```julia
+# Knockout genes b0978 and b0734
+# encoding cytochrome oxidases (bo and putative).
+const ko_fluxes = flux_balance_analysis_dict(
+    model,
+    Tulip.Optimizer;
+    modifications = [knockout(["b0978", "b0734"])],
+)
+
+# Save KO cytochrome oxidase genes metabolic reactions graph.
+!isfile(KOReactionsPath) && save(KOReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(ko_fluxes, tolerance, :red)))
+```
+
+Now, we can knockout (remove) two genes, [b0978](https://biocyc.org/gene?orgid=ECOLI&id=EG11380) and [b0734](https://biocyc.org/gene?orgid=ECOLI&id=EG10174) which encode cytochrome oxidases (bo and putative):
+
 ![KO Cytochrome Oxidase Reaction Set](results/svg/ko_genes_reactions.svg)
+
+The metabolism has now been drastically altered, since the cell is now [forced to use a different process](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2607145/), called fermentation, to grow.
+A side-effect of this change is that the cell physiology has changed significantly, and it's growing with a smaller rate (0.21 1/h), but it also produces ethanol and acetate, which can be used as [biofuels](https://www.nature.com/articles/s41598-022-09148-2), among others.
 
 <details>
 <summary>Click to see results table</summary>
@@ -321,6 +358,24 @@ The resulting metabolic maps are saved by default, if not already present.
 </details>
 
 ---
+
+```julia
+# Set minimum constraint for cell growth so that the resulting reaction set is viable.
+model_with_bounded_production = change_bound(model, "BIOMASS_Ecoli_core_w_GAM", lower = 0.1)
+const max_etoh_fluxes = flux_balance_analysis_dict(
+    model_with_bounded_production,
+    Tulip.Optimizer;
+    modifications = [
+        change_objective("EX_etoh_e"), # maximze ethanol production
+    ],
+)
+
+# Save maximum EtOH production metabolic reactions graph.
+!isfile(MaxEtOHReactionsPath) && save(MaxEtOHReactionsPath, vismetabolism(MapPath, generate_flux_edge_colors(max_etoh_fluxes, tolerance, :red)))
+```
+
+But what if we wanted to take this a step further, and search for the single point where ethanol production is optimized while ensuring that the cell can still grow?
+No problem:
 
 ![Max Ethanol Production Reaction Set](results/svg/max_etoh_reactions.svg)
 
