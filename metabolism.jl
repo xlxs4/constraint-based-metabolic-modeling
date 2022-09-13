@@ -73,29 +73,25 @@ end
 ##
 # Visualize the metabolism.
 function vismetabolism(mappath, reaction_edge_color::T) where {T<:Union{Symbol, AbstractDict}}
-
-    insert::Expr
-    if reaction_edge_color isa Symbol
-        insert = :(reaction_edge_color = $reaction_edge_color,)
-    elseif reaction_edge_color isa AbstractDict
-        insert = :(reaction_edge_colors = $reaction_edge_color,)
+    if T <: Symbol
+        kwargs = (reaction_edge_color = reaction_edge_color,)
+    elseif T <: AbstractDict
+        kwargs = (reaction_edge_colors = reaction_edge_color,)
     else
-        insert = :()
+        kwargs = ()
     end
 
     f = Figure()
     ax = Axis(f[1, 1])
 
-    eval(quote
-        escherplot!(
-            mappath;
-            $(insert),
-            reaction_show_text = true,
-            metabolite_show_text = true,
-            metabolite_node_colors = Dict("glc__D_e" => :red),
-            metabolite_node_color = :lightskyblue
-        )
-    end)
+    escherplot!(
+        mappath;
+        kwargs...,
+        reaction_show_text = true,
+        metabolite_show_text = true,
+        metabolite_node_colors = Dict("glc__D_e" => :red),
+        metabolite_node_color = :lightskyblue
+    )
 
     hidexdecorations!(current_axis())
     hideydecorations!(current_axis())
